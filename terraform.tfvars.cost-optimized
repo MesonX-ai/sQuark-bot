@@ -1,6 +1,16 @@
 # Cost-Optimized Terraform Variables
 # For low-traffic chatbot API: <100K calls/month
 # Estimated Monthly Cost: $8-15 (vs $120-170 for standard setup)
+#
+# ============================================================================
+# DUAL-PURPOSE BACKEND
+# ============================================================================
+# This backend serves TWO applications:
+#   1. sQuark AI Browser (Desktop application)
+#   2. Chatbot in sQuark.ai Website (Web widget)
+#
+# Both applications share the same backend infrastructure
+# ============================================================================
 
 # ============================================================================
 # DISABLE EXPENSIVE SERVICES

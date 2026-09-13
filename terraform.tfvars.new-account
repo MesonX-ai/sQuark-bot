@@ -60,19 +60,43 @@ admin_email = "admin@example.com"
 # Example: "squark-bot-mycompany-prod"
 cognito_domain_prefix = "squark-bot-unique-prefix"
 
+# ============================================================================
+# IMPORTANT: This backend serves TWO applications:
+#   1. sQuark AI Browser (Desktop application)
+#   2. Chatbot in sQuark.ai Website (Web widget)
+# ============================================================================
+
 # Allowed callback URLs after Cognito authentication
-# Add your frontend URLs here
+# Add callback URLs for BOTH applications
 cognito_callback_urls = [
+  # Development (local testing)
   "http://localhost:3000",
   "http://localhost:8080",
-  "https://your-chatbot.com/callback"
+  
+  # sQuark AI Browser (Desktop app)
+  "squark://auth/callback",
+  "squark-browser://auth/callback",
+  
+  # sQuark.ai Website
+  "https://sQuark.ai/auth/callback",
+  "https://sQuark.ai/chat/callback",
+  "https://www.sQuark.ai/auth/callback"
 ]
 
 # Allowed logout URLs
 cognito_logout_urls = [
+  # Development
   "http://localhost:3000",
   "http://localhost:8080",
-  "https://your-chatbot.com"
+  
+  # sQuark AI Browser
+  "squark://logout",
+  "squark-browser://logout",
+  
+  # sQuark.ai Website
+  "https://sQuark.ai",
+  "https://sQuark.ai/chat",
+  "https://www.sQuark.ai"
 ]
 
 # ============================================================================

@@ -2,6 +2,8 @@
 
 **Deploy sQuark Bot for $8-15/month instead of $120-170/month**
 
+**Serves**: sQuark AI Browser + Chatbot in sQuark.ai Website
+
 ---
 
 ## 🎯 3-Minute Setup

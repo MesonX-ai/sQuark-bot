@@ -1,50 +1,46 @@
-# sQuark AI Browser AWS Infrastructure Guide
+# sQuark Bot Backend - Dual-Purpose Chatbot API
 
-This folder contains the AWS infrastructure for the sQuark AI browser.
+Backend infrastructure for:
+- **sQuark AI Browser** (Desktop application)
+- **Chatbot in sQuark.ai Website** (Web widget)
+
+This folder contains the AWS infrastructure for the unified sQuark Bot Backend.
 
 The goal of this guide is simple: explain what each cloud piece does, how they work together, and why the system is built this way.
 
 If you are new to AWS, think of this setup like a team of helpers:
 
 - `API Gateway` is the front door.
-- `Lambda` is the traffic manager.
-- `SQS` is the waiting line.
-- `ECS Fargate` is the worker team.
-- `DynamoDB` is the memory notebook.
-- `S3` is the storage closet.
-- `Secrets Manager` is the lockbox.
-- `ECR` is the container image warehouse.
+- `Lambda` is the traffic manager (chatbot orchestrator).
+- `DynamoDB` is the memory notebook (chat sessions).
+- `CloudWatch` is the log keeper (monitoring).
+- `S3` is the storage closet (optional assets).
+- `ECR` is the container image warehouse (optional).
 
 ## What Problem This Architecture Solves
 
-The sQuark AI browser needs cloud infrastructure for jobs that are too heavy, too shared, or too remote to run only inside the desktop app.
+Both the sQuark AI Browser and the sQuark.ai website chatbot need a shared cloud backend for:
 
-Examples:
+- Unified chatbot API endpoint
+- Real-time message processing
+- Session state management
+- LLM integration (Gemini, OpenAI, Claude)
+- User conversation history
+- Scalable request handling
 
-- keeping real-time connections open
-- sending browser tasks to worker containers
-- saving session state safely
-- storing generated files like screenshots or assets
-- running browser workers in isolated cloud containers
-
-This infrastructure lets sQuark do those jobs in a way that is scalable, organized, and easier to operate.
+This infrastructure lets both applications share resources efficiently while maintaining separate session spaces.
 
 ## The Big Picture
 
 ```mermaid
 flowchart TD
-    A[User using sQuark AI Browser] --> B[API Gateway WebSocket]
-    B --> C[Lambda Agent Orchestrator]
-    C --> D[SQS Task Queue]
-    C --> E[DynamoDB Session State]
-    C --> F[Secrets Manager]
-    D --> G[ECS Fargate Browser Workers]
-    G --> E
-    G --> H[S3 Assets Bucket]
-    G --> F
-    I[ECR Repository] --> G
-    J[CloudWatch Logs] --> C
-    J --> G
+    A[sQuark AI Browser<br/>Desktop App] --> B["API Gateway<br/>(HTTP API)"]
+    C[Chatbot Widget<br/>sQuark.ai Website] --> B
+    B --> D["Lambda Functions<br/>(Orchestrator + Auth + LLM Proxy)"]
+    D --> E["DynamoDB<br/>(Chat Sessions)"]
+    D --> F["CloudWatch<br/>(Logs & Metrics)"]
+    D --> G["LLM APIs<br/>(Gemini/OpenAI/Claude)"]
+    E --> H["TTL Auto-Delete<br/>(90 days)"]
 ```
 
 ## How Deployment Works

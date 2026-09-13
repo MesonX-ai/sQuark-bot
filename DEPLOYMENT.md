@@ -1,6 +1,10 @@
-# 🚀 sQuark Bot Backend - Deployment Scripts
+# 🚀 sQuark Bot Backend - Deployment Guide
 
-Automated scripts for deploying sQuark Bot Backend to AWS with GitHub integration.
+Automated deployment of unified chatbot backend for:
+- **sQuark AI Browser** (Desktop application)
+- **Chatbot in sQuark.ai Website** (Web widget)
+
+GitHub integration and AWS infrastructure automation.
 
 ---
 

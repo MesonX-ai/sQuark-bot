@@ -5,6 +5,10 @@
 **Branch**: main  
 **Created**: 2026-09-12
 
+**Purpose**: Backend chatbot API for:
+- sQuark AI Browser (Desktop)
+- Chatbot in sQuark.ai Website (Web)
+
 ---
 
 ## 📦 What Was Created

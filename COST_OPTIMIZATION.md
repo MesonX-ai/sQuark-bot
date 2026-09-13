@@ -2,6 +2,8 @@
 
 **For Low-Traffic Chatbot APIs (<100K calls/month, no auth)**
 
+**Serves**: sQuark AI Browser + Chatbot in sQuark.ai Website
+
 ---
 
 ## Architecture Comparison
