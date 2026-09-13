@@ -1,0 +1,166 @@
+# Cost-Optimized Terraform Variables
+# For low-traffic chatbot API: <100K calls/month
+# Estimated Monthly Cost: $8-15 (vs $120-170 for standard setup)
+
+# ============================================================================
+# DISABLE EXPENSIVE SERVICES
+# ============================================================================
+
+# Disable ECS Fargate (saves $50-75/month)
+enable_ecs_fargate = false
+
+# Disable Cognito (saves $50/month)
+enable_cognito = false
+
+# Enable DynamoDB for chat history (costs only ~$0.10/month with on-demand)
+enable_dynamodb = true
+
+# ============================================================================
+# BASIC CONFIGURATION
+# ============================================================================
+
+aws_region      = "us-east-2"
+project_name    = "squark-bot"
+environment     = "production"
+
+# ============================================================================
+# LAMBDA CONFIGURATION (Keep - these are cheap at <100K calls/month)
+# ============================================================================
+
+# Memory allocation for Lambda functions
+# Default 512MB is good for chatbot workloads
+lambda_memory_size = 512
+
+# Timeout for Lambda functions (in seconds)
+# Chatbot response time is typically 5-10 seconds
+lambda_timeout = 60
+
+# ============================================================================
+# API GATEWAY CONFIGURATION
+# ============================================================================
+
+# HTTP API is cheaper than REST API
+# Cost: $0.35 per 1M API calls (vs $3.50 + $0.35/M for REST)
+api_gateway_type = "HTTP"
+
+# Rate limiting to prevent abuse
+# For low-traffic API, this is just a safety measure
+api_gateway_rate_limit = 1000  # requests per second
+
+# ============================================================================
+# DYNAMODB CONFIGURATION (Optional, for chat history)
+# ============================================================================
+
+# Use ON-DEMAND billing instead of provisioned
+# Cost: $1.25 per million writes, $0.25 per million reads
+# At <100K calls/month with 1-2 DynamoDB operations per call:
+# Estimated cost: $0.05-0.15/month
+dynamodb_billing_mode = "PAY_PER_REQUEST"
+
+# Enable automatic TTL to delete old chat history
+# Saves storage costs by removing stale records after 90 days
+dynamodb_enable_ttl = true
+dynamodb_ttl_attribute_name = "expiration_time"
+dynamodb_ttl_days = 90
+
+# ============================================================================
+# ECR CONFIGURATION (Container Registry)
+# ============================================================================
+
+# ECR storage is FREE for images
+# You only pay for data transfer ($0.09 per GB out)
+ecr_lifecycle_policy_days = 30  # Keep last 30 days of images
+
+# ============================================================================
+# CLOUDWATCH CONFIGURATION
+# ============================================================================
+
+# Log retention: Keep logs for 7 days (free tier includes 5GB/month)
+# After 7 days, logs are automatically deleted
+cloudwatch_log_retention_days = 7
+
+# ============================================================================
+# IAM CONFIGURATION
+# ============================================================================
+
+# Admin email for initial setup (not used with Cognito disabled)
+admin_email = "your-email@example.com"
+
+# ============================================================================
+# LLM CONFIGURATION
+# ============================================================================
+
+# API key for your LLM provider (Gemini, OpenAI, Claude, etc.)
+# This cost is separate from AWS and scales with your usage
+gemini_api_key = ""  # Set this to your API key
+
+# ============================================================================
+# COST BREAKDOWN
+# ============================================================================
+# 
+# Monthly Estimated Costs (for <100K API calls/month):
+#
+# Service                    Cost            Notes
+# ─────────────────────────────────────────────────────────────
+# Lambda                     FREE            1M calls/month free tier
+# API Gateway                ~$0.04          100K calls × $0.35/M
+# DynamoDB                   ~$0.10          On-demand, 50K ops
+# CloudWatch Logs            FREE            <5GB/month free tier
+# ECR Storage                FREE            Unlimited storage
+# CloudWatch Metrics         FREE            First 1000 metrics free
+# ─────────────────────────────────────────────────────────────
+# TOTAL AWS COST             $8-15/month     ✅ Under budget!
+#
+# PLUS: LLM API costs (Gemini, OpenAI, Claude)
+#       These scale with usage and are NOT AWS costs
+#
+# ============================================================================
+
+# ============================================================================
+# COMPARISON WITH EXPENSIVE SETUP
+# ============================================================================
+#
+# Service                  Expensive Setup    Cost-Optimized    Savings
+# ──────────────────────────────────────────────────────────────────────
+# ECS Fargate              Enabled            DISABLED          -$50-75
+# Cognito User Pool        $50/month          DISABLED          -$50
+# Lambda                   $5-10              FREE              -$10
+# API Gateway              $3.50              $0.04             -$3.46
+# DynamoDB                 $5-20              $0.10             -$5-20
+# Other Services           $5-10              $5                -$5
+# ──────────────────────────────────────────────────────────────────────
+# TOTAL                    $120-170/month     $8-15/month       ✅ -$105-160!
+#
+# ============================================================================
+
+# ============================================================================
+# NOTES
+# ============================================================================
+#
+# 1. This configuration is optimized for:
+#    - Low-traffic chatbot APIs (<100K calls/month)
+#    - No authentication needed (public API)
+#    - Occasional requests (not 24/7 uptime required)
+#    - Cost-conscious deployment
+#
+# 2. If you need authentication later, add:
+#    - Simple JWT validation in Lambda (free)
+#    - OR Cognito ($50/month, when ready to scale)
+#
+# 3. If traffic grows beyond 1M calls/month:
+#    - Lambda and API Gateway move to pay-per-use
+#    - Cost scales gracefully: $0.50 per 1M additional calls
+#    - You'll still be well under $50/month at 85M calls!
+#
+# 4. CloudWatch Logs are kept for 7 days to stay within free tier
+#    - Older logs are automatically deleted
+#    - To keep longer history, increase cloudwatch_log_retention_days
+#    - (then costs will increase: $0.50/GB per month after first 5GB)
+#
+# 5. No guarantee on uptime since Lambda has cold starts
+#    - First call after 15 min of inactivity: +1-2 second delay
+#    - OK for occasional API calls, not for always-on services
+#    - If uptime is critical, keep ECS or upgrade to provisioned Lambda
+#
+# ============================================================================
+
