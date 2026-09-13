@@ -1,0 +1,61 @@
+# Terraform
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.*
+tfplan
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Environment
+.env
+.env.local
+.env*.local
+terraform.tfvars
+!terraform.tfvars.example
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Build artifacts
+build/
+dist/
+*.zip
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# Python
+venv/
+env/
+.venv
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Logs
+*.log
+logs/
+
+# Local testing
+.local/
+temp/
+tmp/
+
+# Node
+node_modules/
+npm-debug.log
+
+# Python packages
+*.egg
+*.egg-info
+dist
+build

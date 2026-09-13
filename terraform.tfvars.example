@@ -1,0 +1,20 @@
+aws_region               = "us-east-1"
+project_name             = "squark-ai-browser"
+environment              = "prod"
+browser_image_tag        = "latest"
+browser_container_port   = 3000
+browser_cpu              = 2048
+browser_memory           = 4096
+browser_desired_count    = 1
+lambda_timeout           = 60
+lambda_memory_size       = 1024
+
+# Lambda packaging is now handled locally from cloud_formation/lambda.
+
+# Optional override if you want to use an external image instead of the managed ECR repository.
+# browser_container_image = "904600393479.dkr.ecr.us-east-1.amazonaws.com/squark-ai-browser:latest"
+
+tags = {
+  Owner       = "MesonX"
+  Application = "sQuark"
+}

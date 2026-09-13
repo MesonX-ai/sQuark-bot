@@ -1,0 +1,132 @@
+# sQuark Bot Backend - Terraform Configuration
+# Copy this file to terraform.tfvars and update with your AWS account details
+
+# ============================================================================
+# AWS Configuration
+# ============================================================================
+
+# AWS Region (change as needed)
+aws_region = "us-east-2"
+
+# Project name prefix for all resources
+project_name = "squark-bot"
+
+# Deployment environment
+environment = "prod"
+
+# ============================================================================
+# ECS Fargate Configuration (Chatbot Worker)
+# ============================================================================
+
+# Container image tag
+browser_image_tag = "latest"
+
+# Container port
+browser_container_port = 3000
+
+# CPU units (256, 512, 1024, 2048, 4096)
+# 1024 = 1 vCPU (recommended for dev/test)
+# 2048 = 2 vCPU (recommended for production)
+browser_cpu = 1024
+
+# Memory in MiB (512-30720, must be compatible with CPU)
+# 2048 = 2 GB (recommended for dev/test)
+# 4096 = 4 GB (recommended for production)
+browser_memory = 2048
+
+# Number of instances to run (1 for dev, 3+ for production)
+browser_desired_count = 1
+
+# ============================================================================
+# Lambda Configuration
+# ============================================================================
+
+# Lambda function timeout in seconds (60-900)
+lambda_timeout = 60
+
+# Lambda function memory in MiB (128-10240, recommended: 512-1024)
+lambda_memory_size = 1024
+
+# ============================================================================
+# Cognito Configuration
+# ============================================================================
+
+# Admin user email for initial setup (can be updated later in Cognito console)
+# Leave empty to skip initial admin creation
+admin_email = "admin@example.com"
+
+# Cognito domain prefix (must be globally unique!)
+# IMPORTANT: Change this to something unique for your deployment
+# Example: "squark-bot-mycompany-prod"
+cognito_domain_prefix = "squark-bot-unique-prefix"
+
+# Allowed callback URLs after Cognito authentication
+# Add your frontend URLs here
+cognito_callback_urls = [
+  "http://localhost:3000",
+  "http://localhost:8080",
+  "https://your-chatbot.com/callback"
+]
+
+# Allowed logout URLs
+cognito_logout_urls = [
+  "http://localhost:3000",
+  "http://localhost:8080",
+  "https://your-chatbot.com"
+]
+
+# ============================================================================
+# LLM Configuration
+# ============================================================================
+
+# Google Gemini API Key
+# Get from: https://ai.google.dev/
+# Leave empty to use AWS Secrets Manager instead
+gemini_api_key = ""
+
+# ============================================================================
+# Tags
+# ============================================================================
+
+# Additional tags to apply to all resources
+tags = {
+  Owner       = "Your Name"
+  Project     = "sQuark Bot"
+  Environment = "prod"
+  CostCenter  = "Engineering"
+  Backup      = "true"
+}
+
+# ============================================================================
+# NOTES FOR DIFFERENT AWS ACCOUNT
+# ============================================================================
+#
+# 1. Ensure you have AWS credentials configured:
+#    aws sts get-caller-identity
+#
+# 2. Cognito domain prefix MUST be globally unique across AWS
+#    Change "cognito_domain_prefix" to something like:
+#    - squark-bot-company-prod
+#    - squark-chatbot-12345
+#    - your-bot-prod-2026
+#
+# 3. Update callback/logout URLs with your actual domain:
+#    - Remove localhost URLs for production
+#    - Add your production domain URLs
+#
+# 4. For production, increase resources:
+#    - browser_cpu: 2048 (2 vCPU)
+#    - browser_memory: 4096 (4 GB)
+#    - browser_desired_count: 3 (high availability)
+#    - lambda_memory_size: 2048
+#
+# 5. Set Gemini API key:
+#    - Either here as gemini_api_key = "sk-xxx"
+#    - Or use AWS Secrets Manager (recommended)
+#
+# 6. LLM Providers:
+#    - Google Gemini (free tier available)
+#    - OpenAI (paid, set via Lambda environment)
+#    - Anthropic Claude (paid, set via Lambda environment)
+#
+# ============================================================================
